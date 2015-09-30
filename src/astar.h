@@ -1,1 +1,6 @@
-{\rtf1}
+#pragma once
+
+class AStar
+{
+
+};
