@@ -1,4 +1,5 @@
 #include "pathfinding.h"
+#include <math.h>
 
 namespace PathFinding
 {
@@ -7,11 +8,25 @@ namespace PathFinding
 		struct Node
 		{
 			int x, y;
-			float costH, costG, costF;
+			float costG, costF, costH;
 			int parent;
 		};
 
-		void updateCost(Node &node, Node &parent)
+		void initiateNode(Node &node, int newX, int newY, int parent)
+		{
+			node.x = newX;
+			node.y = newY;
+			node.parent = parent;
+			node.costG = node.costF = node.costH = 0.0f;
+		}
+
+		void updateCostGFH(Node &node, Node &parent, Node&goal)
+		{
+			node.costH = abs(node.x - goal.x) + abs(node.y - goal.y);
+			updateCostGF(node, parent);
+		}
+
+		void updateCostGF(Node &node, Node &parent)
 		{
 			node.costG = parent.costG != 0 ? parent.costG + 10.0f : 0.0f;
 			node.costF = node.costH + node.costG;
