@@ -1,5 +1,6 @@
 #include "pathfinding.h"
 #include <math.h>
+#include <vector>
 
 namespace PathFinding
 {
@@ -23,16 +24,16 @@ namespace PathFinding
 			node.costG = node.costF = node.costH = 0.0f;
 		}
 
-		void updateCostGF(Node &node, const Node &parent)
+		void updateCostGF(Node &node, float parentCostG)
 		{
-			node.costG = parent.costG != 0 ? parent.costG + 10.0f : 0.0f;
+			node.costG = parentCostG != 0 ? parentCostG + 10.0f : 0.0f;
 			node.costF = node.costH + node.costG;
 		}
 
-		void updateCostGFH(Node &node, const Node &parent, const Node &target)
+		void updateCostGFH(Node &node, float parentCostG, const Node &target)
 		{
 			node.costH = abs(node.x - target.x) + abs(node.y - target.y);
-			updateCostGF(node, parent);
+			updateCostGF(node, parentCostG);
 		}
 
 		void AstarStep()
@@ -44,7 +45,18 @@ namespace PathFinding
 	void AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight)
 	{
-		int mapSize = mapWidth * mapHeight, n = 0;
+		std::vector<Node> open, closed, path;
+		int mapSize = mapWidth * mapHeight;
+		int n = 0;
+		
+		Node target;
+		initiateNode(target, targetX, targetY, -1);
+
+		Node start;
+		initiateNode(start, startX, startY, -1);
+		updateCostGFH(start, 0.0f, target);
+		open.push_back(start);
+
 		while (n < mapSize)
 		{
 
