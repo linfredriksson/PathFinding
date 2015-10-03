@@ -10,6 +10,9 @@ namespace PathFinding
 			int x, y;
 			float costG, costF, costH;
 			int parent;
+
+			inline bool operator < (const Node &rhs) { return costF < rhs.costF; }
+			inline bool operator == (const Node &rhs) { return x == rhs.x && y == rhs.y; }
 		};
 
 		void initiateNode(Node &node, int newX, int newY, int parent)
@@ -41,6 +44,10 @@ namespace PathFinding
 	void AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight)
 	{
+		int mapSize = mapWidth * mapHeight, n = 0;
+		while (n < mapSize)
+		{
 
+		}
 	}
 };
