@@ -3,8 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <iostream>
-
 namespace PathFinding
 {
 	namespace
@@ -81,11 +79,9 @@ namespace PathFinding
 				{
 					if (currentNode->costG + 10 < it->costG)
 					{
-						// find currentNodes position in the closed list.
-						// set this position as the temp nodes parent.
-						// update cost.
+						(*it).parent = closed.size() - 1;
+						updateCostGF((*it), currentNode->costG);
 					}
-
 					continue;
 				}
 
@@ -93,6 +89,13 @@ namespace PathFinding
 
 				if (temp == target)
 				{
+					auto tmp = temp;
+					while (tmp.parent != -1)
+					{
+						path.push_back(tmp);
+						tmp = closed[tmp.parent];
+					}
+
 					return true;
 				}
 			}
@@ -101,10 +104,10 @@ namespace PathFinding
 		}
 	}
 
-	void AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
-		int mapWidth, int mapHeight)
+	bool AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
+		int mapWidth, int mapHeight, int *path, int pathLength)
 	{
-		list open, closed, path;
+		list open, closed, finalPath;
 		int mapSize = mapWidth * mapHeight;
 		int n = 0;
 		
@@ -116,11 +119,24 @@ namespace PathFinding
 		updateCostGFH(start, 0.0f, target);
 		open.push_back(start);
 
-		bool result = AStarStep(map, mapWidth, mapHeight, target, open, closed, path);
+		bool result = AStarStep(map, mapWidth, mapHeight, target, open, closed, finalPath);
 
 		if (result)
-			std::cout << "PATH FOUND :)" << std::endl;
+		{
+			for (int i = 0; i < pathLength; ++i)
+				path[i] = -1;
+
+			if (pathLength < finalPath.size())
+				return false;
+
+			for (int i = 0; i < finalPath.size(); ++i)
+				path[i] = finalPath[i].x + finalPath[i].y * mapWidth;
+
+			return true;
+		}
 		else
-			std::cout << "NO PATH FOUND :(" << std::endl;
+		{
+			return false;
+		}
 	}
 };
