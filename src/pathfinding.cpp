@@ -17,8 +17,6 @@ namespace PathFinding
 			inline bool operator == (const Node &rhs) { return x == rhs.x && y == rhs.y; }
 		};
 
-		typedef std::vector<Node> list;
-
 		void initiateNode(Node &node, int newX, int newY, int parent)
 		{
 			node.x = newX;
@@ -40,7 +38,7 @@ namespace PathFinding
 		}
 
 		bool AStarStep(const unsigned char &	map, int mapWidth, int mapHeight,
-			const Node &target, list &open, list &closed)
+			const Node &target, std::vector<Node> &open, std::vector<Node> &closed)
 		{
 			if (open.size() == 0)
 				return false;
@@ -74,8 +72,8 @@ namespace PathFinding
 				{
 					if (currentNode->costG + 10 < it->costG)
 					{
-						(*it).parent = closed.size() - 1;
-						updateCostGF((*it), currentNode->costG);
+						it->parent = closed.size() - 1;
+						updateCostGF(*it, currentNode->costG);
 					}
 					continue;
 				}
@@ -93,7 +91,7 @@ namespace PathFinding
 	bool AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight, int *path, int pathLength)
 	{
-		list open, closed;
+		std::vector<Node> open, closed;
 		int mapSize = mapWidth * mapHeight;
 		int n = 0;
 		
@@ -105,30 +103,26 @@ namespace PathFinding
 		updateCostGFH(start, 0.0f, target);
 		open.push_back(start);
 
-		bool result = AStarStep(map, mapWidth, mapHeight, target, open, closed);
-
-		if (result)
+		if (AStarStep(map, mapWidth, mapHeight, target, open, closed))
 		{
 			for (int i = 0; i < pathLength; ++i)
 				path[i] = -1;
 
 			int i = 0;
-			auto tmp = open.back();
-			while (tmp.parent != -1)
+			Node *tmp = &open.back();
+			while (tmp->parent != -1)
 			{
 				if (i > pathLength)
 					return false;
 				
-				path[i] = closed[tmp.parent].x + closed[tmp.parent].y * mapWidth;
-				tmp = closed[tmp.parent];
+				path[i] = closed[tmp->parent].x + closed[tmp->parent].y * mapWidth;
+				tmp = &closed[tmp->parent];
 				++i;
 			}
 
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+		
+		return false;
 	}
 };
