@@ -16,6 +16,8 @@ namespace PathFinding
 			inline bool operator == (const Node &rhs) { return x == rhs.x && y == rhs.y; }
 		};
 
+		typedef std::vector<Node> list;
+
 		void initiateNode(Node &node, int newX, int newY, int parent)
 		{
 			node.x = newX;
@@ -36,16 +38,21 @@ namespace PathFinding
 			updateCostGF(node, parentCostG);
 		}
 
-		void AstarStep()
+		void AStarStep(list &open, list &closed, list &path)
 		{
+			if (open.size() == 0)
+				return;
 
+			open.pop_back(); // tmp
+
+			AStarStep(open, closed, path);
 		}
 	}
 
 	void AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight)
 	{
-		std::vector<Node> open, closed, path;
+		list open, closed, path;
 		int mapSize = mapWidth * mapHeight;
 		int n = 0;
 		
@@ -57,9 +64,6 @@ namespace PathFinding
 		updateCostGFH(start, 0.0f, target);
 		open.push_back(start);
 
-		while (n < mapSize)
-		{
-
-		}
+		AStarStep(open, closed, path);
 	}
 };
