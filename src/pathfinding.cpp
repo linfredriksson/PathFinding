@@ -40,7 +40,7 @@ namespace PathFinding
 		}
 
 		bool AStarStep(const unsigned char &	map, int mapWidth, int mapHeight,
-			const Node &target, list &open, list &closed, list &path)
+			const Node &target, list &open, list &closed)
 		{
 			if (open.size() == 0)
 				return false;
@@ -57,24 +57,19 @@ namespace PathFinding
 				int posX = (*currentNode).x + neighbour[i][0];
 				int posY = (*currentNode).y + neighbour[i][1];
 
-				// check if neighbour is out of bounds
-				if (posX < 0 || posY < 0 || posX > mapWidth || posY > mapHeight)
-					continue;
-
-				// check if neighbour is a wall
-				if ((&map)[posX + posY * mapWidth])
+				// check if neighbour is out of bounds or is a wall
+				if (posX < 0 || posY < 0 || posX > mapWidth || posY > mapHeight
+					|| (&map)[posX + posY * mapWidth])
 					continue;
 
 				Node temp;
 				initiateNode(temp, posX, posY, closed.size() - 1);
+				updateCostGFH(temp, closed[temp.parent].costG, target);
 
-				// check if neighbour already is in the closed list
 				if (std::find(closed.begin(), closed.end(), temp) != closed.end())
 					continue;
 
-				// check if neighbour already is in the open list
 				auto it = std::find(open.begin(), open.end(), temp);
-
 				if (it != open.end())
 				{
 					if (currentNode->costG + 10 < it->costG)
@@ -88,26 +83,17 @@ namespace PathFinding
 				open.push_back(temp);
 
 				if (temp == target)
-				{
-					auto tmp = temp;
-					while (tmp.parent != -1)
-					{
-						path.push_back(tmp);
-						tmp = closed[tmp.parent];
-					}
-
 					return true;
-				}
 			}
 
-			return AStarStep(map, mapWidth, mapHeight, target, open, closed, path);
+			return AStarStep(map, mapWidth, mapHeight, target, open, closed);
 		}
 	}
 
 	bool AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight, int *path, int pathLength)
 	{
-		list open, closed, finalPath;
+		list open, closed;
 		int mapSize = mapWidth * mapHeight;
 		int n = 0;
 		
@@ -119,18 +105,24 @@ namespace PathFinding
 		updateCostGFH(start, 0.0f, target);
 		open.push_back(start);
 
-		bool result = AStarStep(map, mapWidth, mapHeight, target, open, closed, finalPath);
+		bool result = AStarStep(map, mapWidth, mapHeight, target, open, closed);
 
 		if (result)
 		{
 			for (int i = 0; i < pathLength; ++i)
 				path[i] = -1;
 
-			if (pathLength < finalPath.size())
-				return false;
-
-			for (int i = 0; i < finalPath.size(); ++i)
-				path[i] = finalPath[i].x + finalPath[i].y * mapWidth;
+			int i = 0;
+			auto tmp = open.back();
+			while (tmp.parent != -1)
+			{
+				if (i > pathLength)
+					return false;
+				
+				path[i] = closed[tmp.parent].x + closed[tmp.parent].y * mapWidth;
+				tmp = closed[tmp.parent];
+				++i;
+			}
 
 			return true;
 		}
