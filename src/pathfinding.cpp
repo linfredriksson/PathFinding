@@ -91,16 +91,14 @@ namespace PathFinding
 	bool AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight, int *path, int pathLength)
 	{
-		std::vector<Node> open, closed;
-		int mapSize = mapWidth * mapHeight;
-		int n = 0;
-		
 		Node target;
 		initiateNode(target, targetX, targetY, -1);
 
 		Node start;
 		initiateNode(start, startX, startY, -1);
 		updateCostGFH(start, 0.0f, target);
+		
+		std::vector<Node> open, closed;
 		open.push_back(start);
 
 		if (AStarStep(map, mapWidth, mapHeight, target, open, closed))
