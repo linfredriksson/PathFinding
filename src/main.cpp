@@ -9,9 +9,10 @@ int main()
 	unsigned char *map = new unsigned char[width * height];
 	Maze::PrimsAlgorithm(width, height, map);
 
-	int pathLength = 1000;
-	int *path = new int[pathLength];
-	if (PathFinding::AStar(1, 1, width - 2, height - 2, *map, width, height, path, pathLength))
+	int maxPathLength = 1000;
+	int *path = new int[maxPathLength];
+	int pathLength = PathFinding::AStar(1, 1, width - 2, height - 2, *map, width, height, path, maxPathLength);
+	if (pathLength != -1)
 	{
 		for (int i = 0; i < width * height; ++i)
 		{

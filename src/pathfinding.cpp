@@ -88,7 +88,7 @@ namespace PathFinding
 		}
 	}
 
-	bool AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
+	int AStar(int startX, int startY, int targetX, int targetY, const unsigned char &map,
 		int mapWidth, int mapHeight, int *path, int pathLength)
 	{
 		Node target;
@@ -103,24 +103,21 @@ namespace PathFinding
 
 		if (AStarStep(map, mapWidth, mapHeight, target, open, closed))
 		{
-			for (int i = 0; i < pathLength; ++i)
-				path[i] = -1;
-
 			int i = 0;
 			Node *tmp = &open.back();
 			while (tmp->parent != -1)
 			{
 				if (i > pathLength)
-					return false;
+					return -1;
 				
 				path[i] = closed[tmp->parent].x + closed[tmp->parent].y * mapWidth;
 				tmp = &closed[tmp->parent];
 				++i;
 			}
 
-			return true;
+			return i;
 		}
 		
-		return false;
+		return -1;
 	}
 };
