@@ -84,7 +84,7 @@ namespace PathFinding
 					return true;
 			}
 
-			return AStarStep(map, mapWidth, mapHeight, target, open, closed);
+			return false;
 		}
 	}
 
@@ -101,23 +101,26 @@ namespace PathFinding
 		std::vector<Node> open, closed;
 		open.push_back(start);
 
-		if (AStarStep(map, mapWidth, mapHeight, target, open, closed))
+		while (open.size() != 0)
 		{
-			int i = 0;
-			Node *tmp = &open.back();
-			while (tmp->parent != -1)
+			if (AStarStep(map, mapWidth, mapHeight, target, open, closed))
 			{
-				if (i > pathLength)
-					return -1;
-				
-				path[i] = closed[tmp->parent].x + closed[tmp->parent].y * mapWidth;
-				tmp = &closed[tmp->parent];
-				++i;
-			}
+				int i = 0;
+				Node *tmp = &open.back();
+				while (tmp->parent != -1)
+				{
+					if (i > pathLength)
+						return -1;
 
-			return i;
+					path[i] = closed[tmp->parent].x + closed[tmp->parent].y * mapWidth;
+					tmp = &closed[tmp->parent];
+					++i;
+				}
+				return i;
+			}
 		}
 		
+		// no path found
 		return -1;
 	}
 };
