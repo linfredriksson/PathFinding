@@ -3,6 +3,9 @@
 #include <vector>
 #include <algorithm>
 
+#include <iterator>
+#include <iostream>
+
 namespace PathFinding
 {
 	namespace
@@ -57,7 +60,7 @@ namespace PathFinding
 
 				// check if neighbour is out of bounds or is a wall
 				if (posX < 0 || posY < 0 || posX > mapWidth || posY > mapHeight
-					|| (&map)[posX + posY * mapWidth])
+					|| (&map)[posX + posY * mapWidth] == 0)
 					continue;
 
 				Node temp;
@@ -78,10 +81,13 @@ namespace PathFinding
 					continue;
 				}
 
-				open.push_back(temp);
-
 				if (temp == target)
+				{
+					closed.push_back(temp);
 					return true;
+				}
+
+				open.push_back(temp);
 			}
 
 			return false;
@@ -105,18 +111,22 @@ namespace PathFinding
 		{
 			if (AStarStep(map, mapWidth, mapHeight, target, open, closed))
 			{
-				int i = 0;
-				Node *tmp = &open.back();
-				while (tmp->parent != -1)
-				{
-					if (i > pathLength)
+				Node *tmp = &closed.back();
+				int finalLength = 0;
+
+				do{
+					if (finalLength > pathLength)
 						return -1;
 
-					path[i] = closed[tmp->parent].x + closed[tmp->parent].y * mapWidth;
+					path[finalLength] = tmp->x + tmp->y * mapWidth;
 					tmp = &closed[tmp->parent];
-					++i;
+					++finalLength;
 				}
-				return i;
+				while (tmp->parent != -1);
+
+				std::reverse(path, path + finalLength);
+
+				return finalLength;
 			}
 		}
 		
