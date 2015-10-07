@@ -40,7 +40,7 @@ namespace PathFinding
 			updateCostGF(node, parentCostG);
 		}
 
-		bool AStarStep(const unsigned char &	map, int mapWidth, int mapHeight,
+		bool AStarStep(const unsigned char &map, int mapWidth, int mapHeight,
 			const Node &target, std::vector<Node> &open, std::vector<Node> &closed)
 		{
 			if (open.size() == 0)
@@ -59,7 +59,7 @@ namespace PathFinding
 				int posY = (*currentNode).y + neighbour[i][1];
 
 				// check if neighbour is out of bounds or is a wall
-				if (posX < 0 || posY < 0 || posX > mapWidth || posY > mapHeight
+				if (posX < 0 || posY < 0 || posX >= mapWidth || posY >= mapHeight
 					|| (&map)[posX + posY * mapWidth] == 0)
 					continue;
 
