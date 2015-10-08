@@ -29,7 +29,7 @@ int main()
 				if (i == path[j])
 					isPath = true;
 
-			map[i] == 0 ? printf("#") : isPath ? printf(".") : printf(" ");
+			map[i] ? printf("#") : isPath ? printf(".") : printf(" ");
 			(i + 1) % size[0] == 0 ? printf("\n") : printf("");
 		}
 	}

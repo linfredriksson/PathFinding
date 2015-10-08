@@ -3,9 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <iterator>
-#include <iostream>
-
 namespace PathFinding
 {
 	namespace
@@ -60,7 +57,7 @@ namespace PathFinding
 
 				// check if neighbour is out of bounds or is a wall
 				if (posX < 0 || posY < 0 || posX >= mapWidth || posY >= mapHeight
-					|| (&map)[posX + posY * mapWidth] == 0)
+					|| (&map)[posX + posY * mapWidth])
 					continue;
 
 				Node temp;

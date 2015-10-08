@@ -14,11 +14,11 @@ namespace Maze
 			x = x + directionX * 2;
 			y = y + directionY * 2;
 
-			if (x < 1 || x > sizeX - 2 || y < 1 || y > sizeY - 2 || maze[x + y * sizeX] == 1)
+			if (x < 1 || x > sizeX - 2 || y < 1 || y > sizeY - 2 || maze[x + y * sizeX] == 0)
 				return;
 
-			maze[x + y * sizeX] = 1;
-			maze[x - directionX + (y - directionY) * sizeX] = 1;
+			maze[x + y * sizeX] = 0;
+			maze[x - directionX + (y - directionY) * sizeX] = 0;
 
 			int randomDirection = rand() % 4;
 
@@ -49,7 +49,7 @@ namespace Maze
 	void PrimsAlgorithm(int sizeX, int sizeY, unsigned char *maze)
 	{
 		srand(time(NULL));
-		Fill(sizeX, sizeY, 0, maze);
+		Fill(sizeX, sizeY, 1, maze);
 		PrimsAlgorithmStep(1, 1, 0, 0, sizeX, sizeY, maze);
 	}
 
@@ -64,7 +64,7 @@ namespace Maze
 		for (int y = 0; y < sizeY; ++y)
 		{
 			for (int x = 0; x < sizeX; ++x)
-				maze[x + y * sizeX] == 0 ? printf("#") : printf(" ");
+				maze[x + y * sizeX] ? printf("#") : printf(" ");
 			printf("\n");
 		}
 	}
