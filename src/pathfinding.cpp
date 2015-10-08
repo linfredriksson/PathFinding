@@ -13,8 +13,8 @@ namespace PathFinding
 			float costG, costF, costH;
 			int parent;
 
-			inline bool operator < (const Node &rhs) { return costF > rhs.costF; }
-			inline bool operator == (const Node &rhs) { return x == rhs.x && y == rhs.y; }
+			inline bool operator < (const Node &rhs) const { return costF > rhs.costF; }
+			inline bool operator == (const Node &rhs) const { return x == rhs.x && y == rhs.y; }
 		};
 
 		void initiateNode(Node &node, int newX, int newY, int parent)
@@ -44,7 +44,6 @@ namespace PathFinding
 				return false;
 
 			std::sort(open.begin(), open.end());
-
 			closed.push_back(open.back());
 			open.pop_back();
 			Node *currentNode = &closed.back();

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 #include "pathfinding.h"
 #include "maze.h"
 
@@ -11,9 +12,13 @@ int main()
 	int *path = new int[maxPathLength];
 	unsigned char *map = new unsigned char[size[0] * size[1]];
 	Maze::PrimsAlgorithm(size[0], size[1], map);
+	//Maze::Random(size[0], size[1], 0.1, map);
 
+	int time0 = clock();
 	int pathLength = PathFinding::AStar(start[0], start[1], goal[0], goal[1], *map,
 		size[0], size[1], path, maxPathLength);
+	int time1 = clock();
+	printf("time: %f seconds\n", (time1 * 0.001 - time0 * 0.001));
 
 	if (pathLength != -1)
 	{

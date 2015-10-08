@@ -56,7 +56,7 @@ namespace Maze
 	void Random(int sizeX, int sizeY, float fillRate, unsigned char *maze)
 	{
 		for (int i = 0; i < sizeX * sizeY; ++i)
-			maze[i] = (rand() % 1000 * 0.001 < fillRate) ? 0 : 1;
+			maze[i] = (rand() % 1000 * 0.001 < fillRate) ? 1 : 0;
 	}
 
 	void printToConsole(int sizeX, int sizeY, unsigned char *maze)
